@@ -7,6 +7,9 @@ on:
   schedule:
     - cron: '8,23,38,53 * * * *'
 permissions: {}
+defaults:
+  run:
+    shell: bash
 jobs:
   api:
     runs-on: ubuntu-latest
@@ -15,7 +18,7 @@ jobs:
       - name: Check API health
         run: |
           curl --fail --silent --show-error --max-time 25 https://pushary.com/api/health |
-            jq -e '.status == "healthy"'
+            jq -es 'length == 1 and .[0].status == "healthy"'
   mcp:
     runs-on: ubuntu-latest
     timeout-minutes: 2
