@@ -2,7 +2,7 @@
 
 [![Public service checks](https://github.com/Pushary/pushary-status/actions/workflows/status.yml/badge.svg)](https://github.com/Pushary/pushary-status/actions/workflows/status.yml)
 
-Open the [latest check and its timestamp](https://github.com/Pushary/pushary-status/actions/workflows/status.yml) to see what responded from outside Pushary. GitHub schedules checks every 15 minutes and may delay individual runs.
+Open the [latest check and its timestamp](https://github.com/Pushary/pushary-status/actions/workflows/status.yml) to see what responded from outside Pushary. The badge shows the last completed result. If the latest observation is more than 45 minutes old, treat current status as unknown. The workflow requests a check every 15 minutes, and GitHub can delay or skip scheduled runs.
 
 | Component | What the check measures |
 | --- | --- |
