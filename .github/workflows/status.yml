@@ -1,0 +1,29 @@
+name: Public service checks
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/status.yml']
+  schedule:
+    - cron: '8,23,38,53 * * * *'
+permissions: {}
+jobs:
+  api:
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    steps:
+      - name: Check API health
+        run: |
+          curl --fail --silent --show-error --max-time 25 https://pushary.com/api/health |
+            jq -e '.status == "healthy"'
+  mcp:
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    steps:
+      - name: Initialize hosted MCP
+        run: |
+          curl --fail --silent --show-error --max-time 25 https://pushary.com/api/mcp/mcp \
+            -H 'Content-Type: application/json' -H 'Accept: application/json, text/event-stream' \
+            --data '{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":"2025-03-26","capabilities":{},"clientInfo":{"name":"pushary-status","version":"1"}}}' |
+            sed -e 's/^data: *//' -e '/^event:/d' |
+            jq -es 'any(.[]; .id == 1 and (.result.serverInfo.name | ascii_downcase | contains("pushary")) and (.result.capabilities | has("tools")))'
